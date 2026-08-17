@@ -1,97 +1,196 @@
-import { Float } from '@react-three/drei'
+import { useMemo } from 'react'
+import { Float, RoundedBox } from '@react-three/drei'
 import { useParallax } from './useParallax'
+import { createDeskGrainTexture, createKeycapTexture, createScreenTexture } from './workstationTextures'
 
 const BODY = '#dedad1'
-const DARK = '#26241f'
-const SCREEN = '#171717'
+const DARK = '#211f1a'
+const SCREEN_BEZEL = '#18160f'
 const ACCENT = '#d96c45'
 const PLANT = '#6b7455'
+const PLANT_DARK = '#565f45'
+const MUG = '#3a3630'
+
+const DESK_Y = -1.22
+
+function Desk() {
+  const grain = useMemo(() => createDeskGrainTexture(), [])
+  return (
+    <mesh position={[0, DESK_Y - 0.04, 0.35]} receiveShadow>
+      <boxGeometry args={[4.4, 0.08, 2.3]} />
+      <meshStandardMaterial map={grain} roughnessMap={grain} bumpMap={grain} bumpScale={0.006} roughness={0.6} />
+    </mesh>
+  )
+}
 
 function Monitor() {
+  const screenTex = useMemo(() => createScreenTexture(), [])
+  const footH = 0.05
+  const neckH = 0.4
+  const bodyH = 1.3
+  const bodyW = 2.1
+  const bodyD = 0.08
+  const footY = DESK_Y + footH / 2
+  const neckY = DESK_Y + footH + neckH / 2
+  const bodyY = DESK_Y + footH + neckH + bodyH / 2
+
   return (
-    <group position={[0, 0.35, 0]}>
-      <mesh position={[0, 0, 0]} castShadow>
-        <boxGeometry args={[2.2, 1.4, 0.08]} />
-        <meshStandardMaterial color={DARK} roughness={0.55} metalness={0.1} />
+    <group>
+      <mesh position={[0, footY, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.32, 0.36, footH, 32]} />
+        <meshStandardMaterial color={DARK} roughness={0.5} metalness={0.2} />
       </mesh>
-      <mesh position={[0, 0, 0.045]}>
-        <planeGeometry args={[2.0, 1.2]} />
-        <meshStandardMaterial color={SCREEN} roughness={0.3} metalness={0.2} />
+      <mesh position={[0, neckY, 0]} castShadow>
+        <cylinderGeometry args={[0.045, 0.05, neckH, 16]} />
+        <meshStandardMaterial color={DARK} roughness={0.5} metalness={0.2} />
       </mesh>
-      <mesh position={[-0.6, 0.28, 0.05]}>
-        <planeGeometry args={[1.0, 0.16]} />
-        <meshStandardMaterial color={BODY} roughness={0.4} />
-      </mesh>
-      <mesh position={[-0.75, -0.05, 0.05]}>
-        <planeGeometry args={[0.55, 0.4]} />
-        <meshStandardMaterial color="#3a3830" roughness={0.5} />
-      </mesh>
-      <mesh position={[0, -0.85, -0.1]} castShadow>
-        <cylinderGeometry args={[0.06, 0.06, 0.55, 12]} />
-        <meshStandardMaterial color={DARK} roughness={0.5} />
-      </mesh>
-      <mesh position={[0, -1.14, -0.1]} castShadow>
-        <cylinderGeometry args={[0.42, 0.42, 0.04, 24]} />
-        <meshStandardMaterial color={DARK} roughness={0.5} />
+      <RoundedBox args={[bodyW, bodyH, bodyD]} radius={0.04} smoothness={4} position={[0, bodyY, 0]} castShadow>
+        <meshStandardMaterial color={SCREEN_BEZEL} roughness={0.45} metalness={0.25} />
+      </RoundedBox>
+      <mesh position={[0, bodyY, bodyD / 2 + 0.004]}>
+        <planeGeometry args={[bodyW - 0.14, bodyH - 0.14]} />
+        <meshStandardMaterial
+          map={screenTex}
+          emissive="#ffffff"
+          emissiveMap={screenTex}
+          emissiveIntensity={0.85}
+          roughness={0.3}
+          metalness={0.1}
+        />
       </mesh>
     </group>
   )
 }
 
 function Keyboard() {
+  const keycapTex = useMemo(() => createKeycapTexture(), [])
+  const width = 1.6
+  const depth = 0.55
+  const height = 0.045
+  const y = DESK_Y + height / 2
   return (
-    <mesh position={[0, -1.16, 0.9]} rotation={[-0.15, 0, 0]} castShadow>
-      <boxGeometry args={[1.5, 0.06, 0.55]} />
-      <meshStandardMaterial color={BODY} roughness={0.6} />
-    </mesh>
-  )
-}
-
-function Mouse() {
-  return (
-    <mesh position={[1.05, -1.14, 0.85]} rotation={[0, 0.3, 0]} castShadow>
-      <capsuleGeometry args={[0.09, 0.14, 4, 12]} />
-      <meshStandardMaterial color={BODY} roughness={0.5} />
-    </mesh>
-  )
-}
-
-function Plant() {
-  return (
-    <group position={[-1.55, -0.85, 0.4]}>
-      <mesh castShadow>
-        <cylinderGeometry args={[0.22, 0.17, 0.4, 16]} />
-        <meshStandardMaterial color={ACCENT} roughness={0.7} />
-      </mesh>
-      <mesh position={[0, 0.35, 0]}>
-        <sphereGeometry args={[0.24, 12, 12]} />
-        <meshStandardMaterial color={PLANT} roughness={0.8} />
+    <group position={[0, y, 0.85]} rotation={[-0.05, 0, 0]}>
+      <RoundedBox args={[width, height, depth]} radius={0.02} smoothness={3} castShadow receiveShadow>
+        <meshStandardMaterial color={DARK} roughness={0.6} />
+      </RoundedBox>
+      <mesh position={[0, height / 2 + 0.002, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[width - 0.06, depth - 0.06]} />
+        <meshStandardMaterial map={keycapTex} roughnessMap={keycapTex} bumpMap={keycapTex} bumpScale={0.003} roughness={0.7} />
       </mesh>
     </group>
   )
 }
 
-function Books() {
+function Mouse() {
+  const r = 0.075
+  const y = DESK_Y + r * 0.7
   return (
-    <group position={[1.6, -1.1, 0.15]}>
-      <mesh castShadow>
-        <boxGeometry args={[0.7, 0.08, 0.5]} />
+    <group position={[1.15, y, 0.8]} rotation={[0, 0.32, 0]}>
+      <mesh castShadow receiveShadow rotation={[Math.PI / 2, 0, 0]} scale={[1, 1, 0.72]}>
+        <capsuleGeometry args={[r, 0.1, 4, 16]} />
+        <meshStandardMaterial color={BODY} roughness={0.35} />
+      </mesh>
+      <mesh position={[0, r * 0.95, 0.09]}>
+        <boxGeometry args={[0.012, 0.01, 0.05]} />
+        <meshStandardMaterial color="#8f8577" roughness={0.5} />
+      </mesh>
+    </group>
+  )
+}
+
+function leafPositions(count) {
+  const arr = []
+  for (let i = 0; i < count; i++) {
+    const angle = (i / count) * Math.PI * 2 + Math.random() * 0.4
+    arr.push({
+      angle,
+      lean: 0.5 + Math.random() * 0.35,
+      length: 0.32 + Math.random() * 0.14,
+      color: Math.random() > 0.5 ? PLANT : PLANT_DARK,
+    })
+  }
+  return arr
+}
+
+function Plant() {
+  const leaves = useMemo(() => leafPositions(6), [])
+  const potH = 0.4
+  const potY = DESK_Y + potH / 2
+
+  return (
+    <group position={[-1.65, 0, 0.35]}>
+      <mesh position={[0, potY, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.22, 0.17, potH, 16]} />
+        <meshStandardMaterial color={ACCENT} roughness={0.75} />
+      </mesh>
+      <mesh position={[0, potY + potH / 2 + 0.01, 0]}>
+        <cylinderGeometry args={[0.225, 0.225, 0.02, 16]} />
+        <meshStandardMaterial color="#4a3a2c" roughness={0.9} />
+      </mesh>
+      {leaves.map((leaf, i) => (
+        <mesh
+          key={i}
+          castShadow
+          position={[
+            Math.cos(leaf.angle) * 0.06,
+            potY + potH / 2 + leaf.length * 0.55,
+            Math.sin(leaf.angle) * 0.06,
+          ]}
+          rotation={[Math.cos(leaf.angle) * leaf.lean, leaf.angle, Math.sin(leaf.angle) * leaf.lean]}
+          scale={[0.32, 1, 0.55]}
+        >
+          <sphereGeometry args={[leaf.length, 8, 8]} />
+          <meshStandardMaterial color={leaf.color} roughness={0.8} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+function Books() {
+  const b1H = 0.075
+  const b2H = 0.07
+  const b1Y = DESK_Y + b1H / 2
+  const b2Y = DESK_Y + b1H + b2H / 2
+
+  return (
+    <group position={[1.7, 0, 0.1]} rotation={[0, -0.12, 0]}>
+      <mesh position={[0, b1Y, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.72, b1H, 0.5]} />
         <meshStandardMaterial color={BODY} roughness={0.6} />
       </mesh>
-      <mesh position={[0.02, 0.14, 0]} castShadow>
-        <boxGeometry args={[0.62, 0.08, 0.45]} />
+      <mesh position={[0.03, b2Y, -0.02]} rotation={[0, 0.08, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.62, b2H, 0.44]} />
         <meshStandardMaterial color={DARK} roughness={0.6} />
       </mesh>
     </group>
   )
 }
 
-function FloatingCube() {
+function Mug() {
+  const r = 0.11
+  const h = 0.22
+  const y = DESK_Y + h / 2
+  return (
+    <group position={[1.32, 0, 0.55]}>
+      <mesh position={[0, y, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[r, r * 0.92, h, 20]} />
+        <meshStandardMaterial color={MUG} roughness={0.4} />
+      </mesh>
+      <mesh position={[r + 0.02, y, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <torusGeometry args={[0.05, 0.014, 8, 16, Math.PI]} />
+        <meshStandardMaterial color={MUG} roughness={0.4} />
+      </mesh>
+    </group>
+  )
+}
+
+function FloatingIcosahedron() {
   return (
     <Float speed={1.6} rotationIntensity={1.1} floatIntensity={1.4}>
-      <mesh position={[1.9, 0.9, -0.6]} castShadow>
-        <boxGeometry args={[0.32, 0.32, 0.32]} />
-        <meshStandardMaterial color={BODY} roughness={0.4} />
+      <mesh position={[1.85, 0.65, -0.55]}>
+        <icosahedronGeometry args={[0.2, 0]} />
+        <meshBasicMaterial color={ACCENT} wireframe />
       </mesh>
     </Float>
   )
@@ -102,12 +201,14 @@ function Workstation() {
   return (
     <group ref={ref}>
       <group position={[0, 0.55, 0]} scale={0.72}>
+        <Desk />
         <Monitor />
         <Keyboard />
         <Mouse />
         <Plant />
         <Books />
-        <FloatingCube />
+        <Mug />
+        <FloatingIcosahedron />
       </group>
     </group>
   )

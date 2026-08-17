@@ -1,5 +1,8 @@
+import { lazy, Suspense } from 'react'
 import Reveal from './Reveal'
 import { systems } from '../data/profile'
+
+const SystemScene = lazy(() => import('../three/SystemScene'))
 
 function Systems() {
   return (
@@ -18,20 +21,11 @@ function Systems() {
           </ul>
         </Reveal>
 
-        <Reveal delay={0.1} className="systems-diagram" aria-hidden="true">
-          <div className="diagram-node">Frontend</div>
-          <div className="diagram-connector" />
-          <div className="diagram-node diagram-node-accent">PHP</div>
-          <div className="diagram-branches">
-            <div className="diagram-branch">
-              <div className="diagram-connector diagram-connector-branch" />
-              <div className="diagram-node diagram-node-small">Database</div>
-            </div>
-            <div className="diagram-branch">
-              <div className="diagram-connector diagram-connector-branch" />
-              <div className="diagram-node diagram-node-small">API</div>
-            </div>
-          </div>
+        <Reveal delay={0.1} className="systems-diagram-panel">
+          <Suspense fallback={<div className="scene-fallback" aria-hidden="true" />}>
+            <SystemScene />
+          </Suspense>
+          <span className="work-drag-hint work-drag-hint-dark">Hover a node, drag to explore</span>
         </Reveal>
       </div>
     </section>

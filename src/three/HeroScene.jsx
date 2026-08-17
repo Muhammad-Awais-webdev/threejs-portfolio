@@ -22,7 +22,7 @@ function HeroScene() {
         />
         <Suspense fallback={null}>
           <Workstation />
-          <ContactShadows position={[0, -1.4, 0]} opacity={0.35} scale={6} blur={2.2} far={2} />
+          <ContactShadows position={[0, -0.4, 0]} opacity={0.4} scale={5} blur={2.4} far={1.2} />
           <Environment preset="city" />
         </Suspense>
       </Canvas>

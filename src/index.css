@@ -552,52 +552,38 @@ img {
   color: var(--muted);
 }
 
-.systems-diagram {
+.systems-diagram-panel {
+  position: relative;
+  aspect-ratio: 4 / 3.2;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #171512;
+  isolation: isolate;
+}
+
+.work-drag-hint-dark {
+  color: rgba(244, 242, 237, 0.5);
+}
+
+.system-node-label {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+  text-align: center;
 }
 
-.diagram-node {
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 14px 28px;
+.system-node-title {
   font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  color: #f4f2ed;
 }
 
-.diagram-node-accent {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.diagram-node-small {
-  font-size: 12px;
-  padding: 10px 18px;
-}
-
-.diagram-connector {
-  width: 1px;
-  height: 32px;
-  background: var(--border);
-}
-
-.diagram-branches {
-  display: flex;
-  gap: 48px;
-  margin-top: 0;
-}
-
-.diagram-branch {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.diagram-connector-branch {
-  height: 32px;
+.system-node-sub {
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(244, 242, 237, 0.55);
 }
 
 @media (max-width: 800px) {
@@ -681,27 +667,244 @@ img {
   }
 }
 
-/* Experiments */
-.experiments {
-  text-align: center;
+/* Box Lab (Experiments) */
+.boxlab-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 40px;
 }
 
-.experiments .section-heading {
-  margin: 0 auto 40px;
+.boxlab-tag {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
-.experiments-canvas {
-  height: min(60vh, 520px);
-  border-radius: 12px;
-  overflow: hidden;
-  background: #ffffff;
+.boxlab-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.3fr 0.85fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.boxlab-copy h2 {
+  font-size: clamp(28px, 3.5vw, 40px);
+  margin-bottom: 16px;
+}
+
+.boxlab-copy p {
+  color: var(--muted);
+  max-width: 34ch;
+  margin-bottom: 32px;
+}
+
+.boxlab-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.boxlab-list li {
+  border-top: 1px solid var(--border);
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.boxlab-list button {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.boxlab-list button:hover {
+  color: var(--text);
+}
+
+.boxlab-canvas {
+  position: relative;
+  aspect-ratio: 4 / 3.4;
   border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
 }
 
-.experiments-caption {
-  margin-top: 20px;
+.boxlab-controls {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.control-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.slider-row {
+  display: grid;
+  grid-template-columns: 52px 1fr 32px;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.slider-row input[type='range'] {
+  accent-color: var(--text);
+  width: 100%;
+}
+
+.slider-value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.swatches {
+  display: flex;
+  gap: 10px;
+}
+
+.swatch {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.swatch:hover {
+  transform: translateY(-1px);
+}
+
+.swatch.is-active {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--text);
+}
+
+.swatch-label {
   font-size: 13px;
   color: var(--muted);
+}
+
+.finish-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.finish-toggle button {
+  flex: 1;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border-right: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.finish-toggle button:last-child {
+  border-right: none;
+}
+
+.finish-toggle button.is-active {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.randomize-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 6px;
+  background: var(--text);
+  color: var(--bg);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.randomize-button:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 900px) {
+  .boxlab-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .boxlab-canvas {
+    order: -1;
+  }
+}
+
+/* Physics */
+.physics-grid {
+  display: grid;
+  grid-template-columns: 0.7fr 1.6fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.physics-copy h2 {
+  font-size: clamp(28px, 3.5vw, 40px);
+  margin-bottom: 12px;
+}
+
+.physics-copy p {
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+.physics-canvas {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .physics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .physics-canvas {
+    order: -1;
+    aspect-ratio: 4 / 3.4;
+  }
 }
 
 /* Contact */

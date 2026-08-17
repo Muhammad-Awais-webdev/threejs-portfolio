@@ -9,6 +9,7 @@ import Process from './components/Process'
 import Systems from './components/Systems'
 import ProjectArchive from './components/ProjectArchive'
 import Experiments from './components/Experiments'
+import Physics from './components/Physics'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 
@@ -28,6 +29,7 @@ function App() {
         <Systems />
         <ProjectArchive />
         <Experiments />
+        <Physics />
         <Contact />
       </main>
       <Footer />

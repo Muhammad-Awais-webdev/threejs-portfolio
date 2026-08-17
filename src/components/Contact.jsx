@@ -5,7 +5,7 @@ function Contact() {
   return (
     <section id="contact" className="section contact">
       <Reveal>
-        <p className="eyebrow">10 / Contact</p>
+        <p className="eyebrow">11 / Contact</p>
         <h2 className="contact-heading">
           Let's build
           <br />
