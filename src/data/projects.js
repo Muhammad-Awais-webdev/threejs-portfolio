@@ -1,0 +1,55 @@
+// Replace with your real projects. `object` controls which 3D shape
+// appears in the Selected Work viewer: 'box' | 'browser' | 'abstract'.
+
+export const projects = [
+  {
+    slug: 'project-one',
+    title: 'Project One',
+    category: 'E-commerce',
+    tech: ['WordPress', 'PHP'],
+    year: '2026',
+    description: 'A custom product architecture with PHP-powered product systems, custom fields and quotation flows.',
+    object: 'box',
+    url: '#',
+  },
+  {
+    slug: 'project-two',
+    title: 'Project Two',
+    category: 'WordPress development',
+    tech: ['WordPress', 'PHP'],
+    year: '2026',
+    description: 'A packaging brand site built on a custom WordPress theme with a tailored admin workflow.',
+    object: 'browser',
+    url: '#',
+  },
+  {
+    slug: 'project-three',
+    title: 'Project Three',
+    category: 'Custom system',
+    tech: ['PHP', 'MySQL'],
+    year: '2025',
+    description: 'A quotation system built on PHP and MySQL, replacing a manual spreadsheet-based process.',
+    object: 'abstract',
+    url: '#',
+  },
+  {
+    slug: 'project-four',
+    title: 'Project Four',
+    category: 'Web application',
+    tech: ['React', 'Three.js'],
+    year: '2025',
+    description: 'An interactive product configurator built with React and Three.js.',
+    object: 'browser',
+    url: '#',
+  },
+  {
+    slug: 'project-five',
+    title: 'Project Five',
+    category: 'E-commerce',
+    tech: ['WordPress', 'WooCommerce'],
+    year: '2024',
+    description: 'A furniture storefront built on WordPress and WooCommerce.',
+    object: 'box',
+    url: '#',
+  },
+]
