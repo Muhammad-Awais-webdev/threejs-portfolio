@@ -1,4 +1,5 @@
 import { useLenis } from './useLenis'
+import ScrollProgress from './components/ScrollProgress'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Intro from './components/Intro'
@@ -18,6 +19,7 @@ function App() {
 
   return (
     <>
+      <ScrollProgress />
       <Navbar />
       <main>
         <Hero />

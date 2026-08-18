@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
-import { Float, RoundedBox } from '@react-three/drei'
-import { useParallax } from './useParallax'
-import { createDeskGrainTexture, createKeycapTexture, createScreenTexture } from './workstationTextures'
+import * as THREE from 'three'
+import { Billboard, Float, RoundedBox } from '@react-three/drei'
+import { createDeskGrainTexture, createGlowTexture, createKeycapTexture, createScreenTexture } from './workstationTextures'
 
 const BODY = '#dedad1'
 const DARK = '#211f1a'
@@ -12,6 +12,29 @@ const PLANT_DARK = '#565f45'
 const MUG = '#3a3630'
 
 const DESK_Y = -1.22
+
+// Camera-facing soft glow, always upright regardless of the model's own
+// rotation — a cheap stand-in for a real bloom pass that renders reliably
+// on every GPU (unlike full post-processing, which blanked the canvas on
+// some WebGL setups).
+function Glow({ position = [0, 0, 0], size, color, opacity = 0.4 }) {
+  const glowTex = useMemo(() => createGlowTexture(), [])
+  return (
+    <Billboard position={position}>
+      <mesh>
+        <planeGeometry args={size} />
+        <meshBasicMaterial
+          map={glowTex}
+          color={color}
+          transparent
+          opacity={opacity}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+    </Billboard>
+  )
+}
 
 function Desk() {
   const grain = useMemo(() => createDeskGrainTexture(), [])
@@ -58,6 +81,7 @@ function Monitor() {
           metalness={0.1}
         />
       </mesh>
+      <Glow position={[0, bodyY, bodyD / 2 + 0.06]} size={[bodyW * 1.5, bodyH * 1.6]} color="#f3c9a0" opacity={0.4} />
     </group>
   )
 }
@@ -101,19 +125,21 @@ function Mouse() {
 function leafPositions(count) {
   const arr = []
   for (let i = 0; i < count; i++) {
-    const angle = (i / count) * Math.PI * 2 + Math.random() * 0.4
+    const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.5
     arr.push({
       angle,
-      lean: 0.5 + Math.random() * 0.35,
-      length: 0.32 + Math.random() * 0.14,
+      tilt: 0.1 + Math.random() * 0.12,
+      height: 0.4 + Math.random() * 0.18,
       color: Math.random() > 0.5 ? PLANT : PLANT_DARK,
     })
   }
   return arr
 }
 
+// Upright tapered blades (snake-plant style) fanned around the pot centre —
+// reads clearly as foliage at small scale, unlike a clustered sphere blob.
 function Plant() {
-  const leaves = useMemo(() => leafPositions(6), [])
+  const leaves = useMemo(() => leafPositions(5), [])
   const potH = 0.4
   const potY = DESK_Y + potH / 2
 
@@ -128,20 +154,16 @@ function Plant() {
         <meshStandardMaterial color="#4a3a2c" roughness={0.9} />
       </mesh>
       {leaves.map((leaf, i) => (
-        <mesh
+        <group
           key={i}
-          castShadow
-          position={[
-            Math.cos(leaf.angle) * 0.06,
-            potY + potH / 2 + leaf.length * 0.55,
-            Math.sin(leaf.angle) * 0.06,
-          ]}
-          rotation={[Math.cos(leaf.angle) * leaf.lean, leaf.angle, Math.sin(leaf.angle) * leaf.lean]}
-          scale={[0.32, 1, 0.55]}
+          position={[Math.cos(leaf.angle) * 0.07, potY + potH / 2, Math.sin(leaf.angle) * 0.07]}
+          rotation={[Math.sin(leaf.angle) * leaf.tilt, leaf.angle, Math.cos(leaf.angle) * -leaf.tilt]}
         >
-          <sphereGeometry args={[leaf.length, 8, 8]} />
-          <meshStandardMaterial color={leaf.color} roughness={0.8} />
-        </mesh>
+          <mesh position={[0, leaf.height / 2, 0]} castShadow scale={[0.34, 1, 0.62]}>
+            <coneGeometry args={[0.055, leaf.height, 6]} />
+            <meshStandardMaterial color={leaf.color} roughness={0.75} />
+          </mesh>
+        </group>
       ))}
     </group>
   )
@@ -188,28 +210,28 @@ function Mug() {
 function FloatingIcosahedron() {
   return (
     <Float speed={1.6} rotationIntensity={1.1} floatIntensity={1.4}>
-      <mesh position={[1.85, 0.65, -0.55]}>
-        <icosahedronGeometry args={[0.2, 0]} />
-        <meshBasicMaterial color={ACCENT} wireframe />
-      </mesh>
+      <group position={[1.85, 0.65, -0.55]}>
+        <Glow size={[0.85, 0.85]} color={ACCENT} opacity={0.35} />
+        <mesh>
+          <icosahedronGeometry args={[0.2, 0]} />
+          <meshBasicMaterial color={ACCENT} wireframe />
+        </mesh>
+      </group>
     </Float>
   )
 }
 
 function Workstation() {
-  const ref = useParallax(0.2)
   return (
-    <group ref={ref}>
-      <group position={[0, 0.55, 0]} scale={0.72}>
-        <Desk />
-        <Monitor />
-        <Keyboard />
-        <Mouse />
-        <Plant />
-        <Books />
-        <Mug />
-        <FloatingIcosahedron />
-      </group>
+    <group position={[0, 0.55, 0]} scale={0.72}>
+      <Desk />
+      <Monitor />
+      <Keyboard />
+      <Mouse />
+      <Plant />
+      <Books />
+      <Mug />
+      <FloatingIcosahedron />
     </group>
   )
 }

@@ -27,11 +27,6 @@ function Contact() {
               GitHub
             </a>
           </li>
-          <li>
-            <a href={profile.social.behance} target="_blank" rel="noreferrer">
-              Behance
-            </a>
-          </li>
         </ul>
       </Reveal>
     </section>

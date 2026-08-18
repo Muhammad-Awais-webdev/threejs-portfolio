@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { ContactShadows, Environment } from '@react-three/drei'
+import DragRotate from './DragRotate'
 import Workstation from './Workstation'
 import WebglGate from './WebglGate'
 
@@ -10,18 +11,23 @@ function HeroScene() {
       <Canvas
         shadows
         dpr={[1, 1.5]}
-        camera={{ position: [2.7, 1.1, 5.4], fov: 30 }}
-        gl={{ alpha: true, antialias: true }}
+        camera={{ position: [3.5, 1.4, 7], fov: 30 }}
+        gl={{ antialias: true }}
       >
-        <ambientLight intensity={0.7} />
+        <color attach="background" args={['#f4f2ed']} />
+        <ambientLight intensity={0.6} />
         <directionalLight
           position={[3, 4, 2]}
-          intensity={1.1}
+          intensity={1.3}
           castShadow
           shadow-mapSize={[1024, 1024]}
         />
+        <pointLight position={[-1.2, 0.6, 1.4]} intensity={0.5} color="#d96c45" distance={4} />
+        <pointLight position={[0.4, 1.4, 1.1]} intensity={0.35} color="#ffffff" distance={3} />
         <Suspense fallback={null}>
-          <Workstation />
+          <DragRotate autoRotateSpeed={0.1}>
+            <Workstation />
+          </DragRotate>
           <ContactShadows position={[0, -0.4, 0]} opacity={0.4} scale={5} blur={2.4} far={1.2} />
           <Environment preset="city" />
         </Suspense>
