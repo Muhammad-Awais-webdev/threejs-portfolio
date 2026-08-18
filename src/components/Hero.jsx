@@ -38,10 +38,15 @@ function Hero() {
         <motion.p className="hero-tagline" variants={reduceMotion ? undefined : item}>
           {profile.tagline}
         </motion.p>
-        <motion.a className="button button-primary" href="#work" variants={reduceMotion ? undefined : item}>
-          Explore work
-          <span aria-hidden="true"> &rarr;</span>
-        </motion.a>
+        <motion.div className="hero-actions" variants={reduceMotion ? undefined : item}>
+          <a className="button button-primary" href="#work">
+            Explore work
+            <span aria-hidden="true"> &rarr;</span>
+          </a>
+          <a className="button button-secondary" href={profile.resumeUrl} download>
+            Download CV
+          </a>
+        </motion.div>
       </motion.div>
 
       <div className="hero-scene">

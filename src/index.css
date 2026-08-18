@@ -121,6 +121,16 @@ img {
   color: var(--bg);
 }
 
+.button-secondary {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.button-secondary:hover {
+  border-color: var(--text);
+}
+
 /* Scroll progress */
 .scroll-progress {
   position: fixed;
@@ -281,6 +291,12 @@ input:focus-visible {
   margin: 24px 0 32px;
   color: var(--muted);
   font-size: 16px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
 }
 
 .hero-scene {

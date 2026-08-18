@@ -4,6 +4,7 @@ export const profile = {
   role: 'Full-Stack Developer',
   tagline: 'React / Node / PHP / 3D',
   email: 'mawaisnadeem001@gmail.com',
+  resumeUrl: '/Muhammad-Awais-CV.pdf',
   social: {
     linkedin: 'https://www.linkedin.com/in/-dev-muhammad-awais/',
     github: 'https://github.com/Muhammad-Awais-webdev',
